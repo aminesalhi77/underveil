@@ -2,13 +2,13 @@ extends Node3D
 
 
 func _ready() -> void:
+	_build_environment()
 	_build_world()
 	_build_player()
 	_build_hud()
 
 
-func _build_world() -> void:
-	# Sky + ambient light
+func _build_environment() -> void:
 	var env := WorldEnvironment.new()
 	var e := Environment.new()
 	e.background_mode = Environment.BG_SKY
@@ -26,44 +26,26 @@ func _build_world() -> void:
 	env.environment = e
 	add_child(env)
 
-	# Directional "moon" light
 	var sun := DirectionalLight3D.new()
-	sun.position = Vector3(20, 30, 15)
+	sun.position = Vector3(30, 40, 20)
 	sun.rotation_degrees = Vector3(-55, 25, 0)
-	sun.light_color = Color(0.85, 0.90, 1.0)
-	sun.light_energy = 1.1
+	sun.light_color = Color(0.9, 0.92, 1.0)
+	sun.light_energy = 1.15
 	sun.shadow_enabled = true
 	sun.shadow_bias = 0.05
 	add_child(sun)
 
-	# Ground plane (static, with collision)
-	var ground := StaticBody3D.new()
-	ground.name = "Ground"
 
-	var ground_mesh := MeshInstance3D.new()
-	var pm := PlaneMesh.new()
-	pm.size = Vector2(200, 200)
-	ground_mesh.mesh = pm
-	var mat := StandardMaterial3D.new()
-	mat.albedo_color = Color(0.20, 0.30, 0.16)
-	mat.roughness = 0.95
-	ground_mesh.material_override = mat
-	ground.add_child(ground_mesh)
-
-	var ground_col := CollisionShape3D.new()
-	var box := BoxShape3D.new()
-	box.size = Vector3(200, 0.2, 200)
-	ground_col.shape = box
-	ground_col.position = Vector3(0, -0.1, 0)
-	ground.add_child(ground_col)
-
-	add_child(ground)
+func _build_world() -> void:
+	var w := World.new()
+	w.name = "World"
+	add_child(w)
 
 
 func _build_player() -> void:
 	var player := Player.new()
 	player.name = "Player"
-	player.position = Vector3(0, 1.5, 0)
+	player.position = Vector3(40, 30, 40)
 	add_child(player)
 
 
@@ -87,4 +69,4 @@ func _build_hud() -> void:
 	timer.wait_time = 0.25
 	timer.autostart = true
 	timer.timeout.connect(func(): label.text = "FPS: %d" % Engine.get_frames_per_second())
-	add_child(timer) 
+	add_child(timer)
