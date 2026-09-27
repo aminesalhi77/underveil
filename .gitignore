@@ -13,4 +13,4 @@ data_*/
 # OS junk
 .DS_Store
 Thumbs.db
-*~
+*~.godot/
